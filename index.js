@@ -6,7 +6,7 @@ import authRouter from './api/routes/auth.route.js';
 import listingRouter from './api/routes/listing.route.js';
 import cookieParser from 'cookie-parser';
 
-// Load environment variables
+// Load environment 
 dotenv.config();
 
 if (!process.env.MONGO) {
