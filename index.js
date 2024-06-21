@@ -5,6 +5,7 @@ import userRouter from './api/routes/user.route.js';
 import authRouter from './api/routes/auth.route.js';
 import listingRouter from './api/routes/listing.route.js';
 import cookieParser from 'cookie-parser';
+import cors from 'cors'; // Import the cors package
 
 // Load environment 
 dotenv.config();
@@ -23,20 +24,32 @@ mongoose.connect(process.env.MONGO)
 
 const app = express();
 
+const allowedOrigins = process.env.NODE_ENV === 'production'
+    ? ['']
+    : ['http://localhost:5173'];
+
+app.use(cors({
+    origin: function (origin, callback) {
+        if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    methods: 'GET,POST,PUT,DELETE',
+    allowedHeaders: 'Content-Type',
+}));
+
 app.use(express.json());
 app.use(cookieParser());
-
-
-
-app.listen(process.env.PORT, () => {
-    console.log('Server is running');
-});
 
 app.use('/api/user', userRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/listing', listingRouter);
 
-
+app.listen(process.env.PORT, () => {
+    console.log('Server is running');
+});
 
 app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;
