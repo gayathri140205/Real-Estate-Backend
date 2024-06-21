@@ -7,7 +7,7 @@ import listingRouter from './api/routes/listing.route.js';
 import cookieParser from 'cookie-parser';
 import cors from 'cors'; // Import the cors package
 
-// Load environment 
+// Load environment variables
 dotenv.config();
 
 if (!process.env.MONGO) {
@@ -24,13 +24,12 @@ mongoose.connect(process.env.MONGO)
 
 const app = express();
 
-const allowedOrigins = process.env.NODE_ENV === 'production'
-    ? ['']
-    : ['http://localhost:5173'];
+// Configure CORS
+const allowedOrigins = ['http://localhost:5173', 'https://your-production-frontend-url.com'];
 
 app.use(cors({
     origin: function (origin, callback) {
-        if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
             callback(null, true);
         } else {
             callback(new Error('Not allowed by CORS'));
@@ -48,13 +47,13 @@ app.use('/api/auth', authRouter);
 app.use('/api/listing', listingRouter);
 
 app.listen(process.env.PORT, () => {
-    console.log('Server is running');
+    console.log(`Server is running on port ${process.env.PORT}`);
 });
 
 app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;
     const message = err.message || 'Internal Server Error';
-
+    console.error(`Error: ${message}`);
     return res.status(statusCode).json({
         success: false,
         statusCode,
