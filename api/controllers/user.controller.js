@@ -5,7 +5,7 @@ import Listing from '../models/listing.model.js';
 
 export const test = (req, res) => {
   res.json({
-    message: "Api route is working"
+    message: "API route is working"
   });
 };
 
@@ -24,7 +24,7 @@ export const updateUser = async (req, res, next) => {
       }
     }, { new: true });
 
-    const { password, ...rest } = updatedUser._doc
+    const { password, ...rest } = updatedUser._doc;
 
     res.status(200).json(rest);
   } catch (error) {
