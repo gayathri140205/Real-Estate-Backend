@@ -24,17 +24,9 @@ mongoose.connect(process.env.MONGO)
 
 const app = express();
 
-// Configure CORS
-const allowedOrigins = ['http://localhost:5173', 'https://your-production-frontend-url.com'];
-
+// Configure CORS to allow any origin
 app.use(cors({
-    origin: function (origin, callback) {
-        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
+    origin: '*', // Allow all origins
     methods: 'GET,POST,PUT,DELETE',
     allowedHeaders: 'Content-Type',
 }));
@@ -46,8 +38,9 @@ app.use('/api/user', userRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/listing', listingRouter);
 
-app.listen(process.env.PORT, () => {
-    console.log(`Server is running on port ${process.env.PORT}`);
+const PORT = process.env.PORT || 3000; // Use a default port if PORT is not set
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
 });
 
 app.use((err, req, res, next) => {
