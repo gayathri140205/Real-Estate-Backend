@@ -25,7 +25,7 @@ mongoose.connect(process.env.MONGO)
 const app = express();
 
 // Configure CORS
-const allowedOrigins = ['http://localhost:5174', 'https://your-production-frontend-url.com'];
+const allowedOrigins = ['http://localhost:5173', 'https://your-production-frontend-url.com'];
 
 app.use(cors({
     origin: function (origin, callback) {
